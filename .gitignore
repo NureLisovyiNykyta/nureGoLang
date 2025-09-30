@@ -1,6 +1,7 @@
 # Reports
 *.docx
 *.pdf
+*.pptx
 
 # Binaries for programs and plugins
 *.exe

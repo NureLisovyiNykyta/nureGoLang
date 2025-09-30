@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func main() {
+func task3() {
 	var element int
 	var value float64
 	fmt.Scan(&element, &value)

@@ -10,5 +10,5 @@ func task1() {
 	fmt.Scan(&a, &b, &c)
 
 	closerToA := math.Abs(b-a) < math.Abs(c-a)
-	fmt.Println(closerToA)
+	fmt.Println("Число b ближче до a, ніж c:", closerToA)
 }

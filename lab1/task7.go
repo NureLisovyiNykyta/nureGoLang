@@ -12,6 +12,7 @@ type student struct {
 
 func task7() {
 	var n int
+	fmt.Print("Введіть кількість студентів: ")
 	fmt.Scan(&n)
 
 	students := make([]student, n)
@@ -20,6 +21,7 @@ func task7() {
 		var name string
 		var kurs int
 		var rating float32
+		fmt.Print("Введіть ім'я, курс та рейтинг студента: ")
 		fmt.Scan(&name, &kurs, &rating)
 		students[i].name = &name
 		students[i].kurs = kurs
@@ -28,7 +30,7 @@ func task7() {
 
 	for _, s := range students {
 		if s.kurs == 3 {
-			fmt.Printf("Name: %s, Rating: %.2f\n", *s.name, s.rating)
+			fmt.Printf("Ім'я: %s, Рейтинг: %.2f\n", *s.name, s.rating)
 		}
 	}
 }

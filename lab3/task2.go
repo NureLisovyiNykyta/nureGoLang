@@ -19,14 +19,18 @@ func task2() {
 	fmt.Println("\n=== Вміст створеного файлу ===")
 	fmt.Println(fileutils.ReadFile(filename))
 
+	fmt.Println("\n=== Видалення ===")
 	fileutils.DeleteByName(filename, "Металіст")
-	fmt.Println("\n=== Після видалення ===")
+	fmt.Println("=== Після видалення ===")
 	fmt.Println(fileutils.ReadFile(filename))
 
+	
+	fmt.Println("\n=== Додавання нових елементів ===")
 	newStadiums := []fileutils.Stadium{
 		{"Дніпро Арена", "Дніпро, Набережна Перемоги", 31000, []string{"Футбол"}},
+		{"Чорноморець", "Одеса, вул. Льва Толстого, 3", 34000, []string{"Футбол"}},
 	}
 	fileutils.AddStadiums(filename, newStadiums)
-	fmt.Println("\n=== Після додавання ===")
+	fmt.Println("=== Після додавання ===")
 	fmt.Println(fileutils.ReadFile(filename))
 }

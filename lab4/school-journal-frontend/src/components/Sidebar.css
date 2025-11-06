@@ -1,0 +1,15 @@
+.sidebar {
+  background-color: #ddd;
+  display: flex;
+  user-select: none;
+}
+
+.sidebar h2 {
+  text-align: center;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}

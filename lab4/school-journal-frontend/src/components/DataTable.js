@@ -10,6 +10,20 @@ export default function DataTable({ endpoint, columns }) {
     fetchData(endpoint).then(setData).catch(console.error);
   }, [endpoint]);
 
+  const getInputType = (accessor) => {
+    if (!accessor) return "text";
+    const a = accessor.toLowerCase();
+    if (a === "email" || a.endsWith("_email")) return "email";
+    if (a === "birth_date" || a === "birthdate" || a === "date" || a.endsWith("_date")) return "date";
+    if (a === "created_at" || a === "updated_at" || a.endsWith("_at")) return "datetime-local";
+    if (a === "value" || a === "score" || a === "grade") return "number";
+    return "text";
+  };
+
+  const visibleFormColumns = columns.filter(
+    (c) => c && !["id", "created_at", "updated_at"].includes(c.accessor)
+  );
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -47,12 +61,13 @@ export default function DataTable({ endpoint, columns }) {
       <h2>{endpoint.toUpperCase()}</h2>
 
       <form className="form" onSubmit={handleSubmit}>
-        {columns.map((col) => (
+        {visibleFormColumns.map((col) => (
           <input
             key={col.accessor}
             name={col.accessor}
+            type={getInputType(col.accessor)}
             placeholder={col.label}
-            value={formData[col.accessor] || ""}
+            value={formData[col.accessor] ?? ""}
             onChange={handleChange}
           />
         ))}
@@ -69,8 +84,8 @@ export default function DataTable({ endpoint, columns }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
-            <tr key={item.id}>
+          {data.map((item, idx) => (
+            <tr key={`${item.id ?? "no-id"}-${idx}`}>
               {columns.map((col) => (
                 <td key={col.accessor}>{item[col.accessor]}</td>
               ))}

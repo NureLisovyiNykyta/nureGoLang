@@ -3,6 +3,9 @@ package main
 import (
 	"log"
 
+	"time"
+	
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
@@ -56,6 +59,16 @@ func main() {
 
 	// Initialize Gin router
 	r := gin.Default()
+
+	// CORS middleware
+	r.Use(cors.New(cors.Config{
+        AllowOrigins:     []string{"http://localhost:3000"}, // змініть origin, якщо фронтенд на іншому порту/домені
+        AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+        ExposeHeaders:    []string{"Content-Length"},
+        AllowCredentials: true,
+        MaxAge:           12 * time.Hour,
+    }))
 
 	// Register all routes
 	routes.InitRoutes(r)

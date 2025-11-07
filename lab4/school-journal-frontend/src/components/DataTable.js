@@ -56,6 +56,28 @@ export default function DataTable({ endpoint, columns }) {
     setData(await fetchData(endpoint));
   };
 
+  const formatValue = (val, accessor) => {
+    if (val == null) return "";
+
+    const key = (accessor || "").toLowerCase();
+
+    const looksLikeDateKey = key.endsWith("_at") || key.includes("_date") || key === "date";
+
+    if (looksLikeDateKey) {
+      if (typeof val === "string" && /\d{4}-\d{2}-\d{2}T/.test(val)) {
+        const d = new Date(val);
+        if (!isNaN(d)) return d.toLocaleString("uk-UA");
+      }
+
+      if (typeof val === "number") {
+        const d = new Date(val);
+        if (!isNaN(d)) return d.toLocaleString("uk-UA");
+      }
+    }
+
+    return val;
+  };
+
   return (
     <div className="table-page">
       <h2>{endpoint.toUpperCase()}</h2>
@@ -87,7 +109,7 @@ export default function DataTable({ endpoint, columns }) {
           {data.map((item, idx) => (
             <tr key={`${item.id ?? "no-id"}-${idx}`}>
               {columns.map((col) => (
-                <td key={col.accessor}>{item[col.accessor]}</td>
+                <td key={col.accessor}>{formatValue(item[col.accessor], col.accessor)}</td>
               ))}
               <td>
                 <button onClick={() => handleEdit(item)}>✏️</button>

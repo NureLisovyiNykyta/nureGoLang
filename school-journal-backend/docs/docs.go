@@ -24,6 +24,485 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/classes/{class_id}/lessons": {
+            "get": {
+                "description": "Returns lessons of a class grouped by subject name",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Classes"
+                ],
+                "summary": "Get all lessons of a class grouped by subject",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID (UUID)",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/classes/{class_id}/students": {
+            "get": {
+                "description": "Returns all students belonging to a given class",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Classes"
+                ],
+                "summary": "Get all students in a class",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID (UUID)",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Student"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/class/{class_id}/subject/{subject_id}/average": {
+            "get": {
+                "description": "Returns the average grade for all students in a class by subject",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Get average grade of a class by subject",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID (UUID)",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Subject ID (UUID)",
+                        "name": "subject_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "number",
+                                "format": "float64"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/statistics/student/{student_id}/subject/{subject_id}/average": {
+            "get": {
+                "description": "Returns the average grade for a given student and subject",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistics"
+                ],
+                "summary": "Get average grade of a student by subject",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Student ID (UUID)",
+                        "name": "student_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Subject ID (UUID)",
+                        "name": "subject_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "number",
+                                "format": "float64"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/students/{student_id}/grades": {
+            "get": {
+                "description": "Returns all grades of a student across all subjects",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Students"
+                ],
+                "summary": "Get all grades of a student",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Student ID (UUID)",
+                        "name": "student_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Grade"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/teachers/{teacher_id}/classes": {
+            "get": {
+                "description": "Returns list of unique classes taught by a teacher",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Teachers"
+                ],
+                "summary": "Get all classes of a teacher",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Teacher ID (UUID)",
+                        "name": "teacher_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Class"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/classes": {
+            "get": {
+                "description": "Get list of all classes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "classes"
+                ],
+                "summary": "List classes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Class"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new class record",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "classes"
+                ],
+                "summary": "Create a new class",
+                "parameters": [
+                    {
+                        "description": "Class to create",
+                        "name": "class",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/classes/{id}": {
+            "get": {
+                "description": "Get class details by UUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "classes"
+                ],
+                "summary": "Get a class by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update class by UUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "classes"
+                ],
+                "summary": "Update a class",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Class data to update",
+                        "name": "class",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete class by UUID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "classes"
+                ],
+                "summary": "Delete a class",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/grades": {
             "get": {
                 "description": "Get list of all grades",

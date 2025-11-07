@@ -49,4 +49,12 @@ func InitRoutes(r *gin.Engine) {
 	api.GET("/grades/:id", controllers.GetGradeByID)
 	api.PUT("/grades/:id", controllers.UpdateGrade)
 	api.DELETE("/grades/:id", controllers.DeleteGrade)
+
+	api.GET("/statistics/student/:student_id/subject/:subject_id/average", controllers.GetStudentAverageBySubject)
+	api.GET("/statistics/class/:class_id/subject/:subject_id/average", controllers.GetClassAverageBySubject)
+
+	api.GET("/classes/:class_id/students", controllers.GetStudentsByClass)
+	api.GET("/classes/:class_id/lessons", controllers.GetLessonsByClass)
+	api.GET("/teachers/:teacher_id/classes", controllers.GetClassesByTeacher)
+	api.GET("/students/:student_id/grades", controllers.GetGradesByStudent)
 }

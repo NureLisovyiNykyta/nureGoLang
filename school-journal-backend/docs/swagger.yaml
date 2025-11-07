@@ -149,6 +149,324 @@ info:
   title: School Journal API
   version: "1.0"
 paths:
+  /api/classes/{class_id}/lessons:
+    get:
+      description: Returns lessons of a class grouped by subject name
+      parameters:
+      - description: Class ID (UUID)
+        in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+      summary: Get all lessons of a class grouped by subject
+      tags:
+      - Classes
+  /api/classes/{class_id}/students:
+    get:
+      description: Returns all students belonging to a given class
+      parameters:
+      - description: Class ID (UUID)
+        in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Student'
+            type: array
+      summary: Get all students in a class
+      tags:
+      - Classes
+  /api/statistics/class/{class_id}/subject/{subject_id}/average:
+    get:
+      description: Returns the average grade for all students in a class by subject
+      parameters:
+      - description: Class ID (UUID)
+        in: path
+        name: class_id
+        required: true
+        type: string
+      - description: Subject ID (UUID)
+        in: path
+        name: subject_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              format: float64
+              type: number
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get average grade of a class by subject
+      tags:
+      - Statistics
+  /api/statistics/student/{student_id}/subject/{subject_id}/average:
+    get:
+      description: Returns the average grade for a given student and subject
+      parameters:
+      - description: Student ID (UUID)
+        in: path
+        name: student_id
+        required: true
+        type: string
+      - description: Subject ID (UUID)
+        in: path
+        name: subject_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              format: float64
+              type: number
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get average grade of a student by subject
+      tags:
+      - Statistics
+  /api/students/{student_id}/grades:
+    get:
+      description: Returns all grades of a student across all subjects
+      parameters:
+      - description: Student ID (UUID)
+        in: path
+        name: student_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Grade'
+            type: array
+      summary: Get all grades of a student
+      tags:
+      - Students
+  /api/teachers/{teacher_id}/classes:
+    get:
+      description: Returns list of unique classes taught by a teacher
+      parameters:
+      - description: Teacher ID (UUID)
+        in: path
+        name: teacher_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Class'
+            type: array
+      summary: Get all classes of a teacher
+      tags:
+      - Teachers
+  /classes:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all classes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Class'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List classes
+      tags:
+      - classes
+    post:
+      consumes:
+      - application/json
+      description: Create a new class record
+      parameters:
+      - description: Class to create
+        in: body
+        name: class
+        required: true
+        schema:
+          $ref: '#/definitions/models.Class'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Class'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new class
+      tags:
+      - classes
+  /classes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete class by UUID
+      parameters:
+      - description: Class ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a class
+      tags:
+      - classes
+    get:
+      consumes:
+      - application/json
+      description: Get class details by UUID
+      parameters:
+      - description: Class ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Class'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a class by id
+      tags:
+      - classes
+    put:
+      consumes:
+      - application/json
+      description: Update class by UUID
+      parameters:
+      - description: Class ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Class data to update
+        in: body
+        name: class
+        required: true
+        schema:
+          $ref: '#/definitions/models.Class'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Class'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a class
+      tags:
+      - classes
   /grades:
     get:
       consumes:

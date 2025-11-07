@@ -8,6 +8,8 @@ export default function LessonsPage() {
     { label: "Дата", accessor: "date" },
     { label: "Тема уроку", accessor: "topic" },
     { label: "Домашнє завдання", accessor: "homework" },
+    { label: "Створено", accessor: "created_at" },
+    { label: "Змінено", accessor: "updated_at" },
   ];
 
   return <DataTable endpoint="lessons" columns={columns} />;
